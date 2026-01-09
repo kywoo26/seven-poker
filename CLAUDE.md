@@ -30,11 +30,16 @@ IDLE → DEVELOPING → PR_PENDING → (PR merged) → IDLE
 ### Workflow
 
 1. Maintainer가 Issue 생성 또는 `/spawn` 으로 작업 할당
-2. Agent가 worktree에서 독립 개발
-3. Agent가 PR 생성 (상세 description + 문서화 필수)
-4. (선택) 다른 Agent가 리뷰
-5. CI 통과 확인
-6. Maintainer가 최종 머지
+2. **Agent가 작업 시작 전 worktree 동기화** (필수):
+   ```bash
+   git fetch origin
+   git rebase origin/master
+   ```
+3. Agent가 worktree에서 독립 개발
+4. Agent가 PR 생성 (상세 description + 문서화 필수)
+5. (선택) 다른 Agent가 리뷰
+6. CI 통과 확인
+7. Maintainer가 최종 머지
 
 ## Tech Stack
 
