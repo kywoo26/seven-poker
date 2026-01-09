@@ -1,18 +1,2 @@
 {
-  "agents": {
-    "enabled": true,
-    "definitions_path": ".claude/agents"
-  },
-  "commands": {
-    "enabled": true,
-    "definitions_path": ".claude/commands"
-  },
-  "hooks": {
-    "enabled": true,
-    "definitions_path": ".claude/hooks"
-  },
-  "project": {
-    "name": "seven-poker",
-    "type": "multi-agent"
-  }
 }
