@@ -1,0 +1,39 @@
+{
+  "project": "seven-poker",
+  "phase": 0,
+  "agents": {
+    "game-logic": {
+      "state": "IDLE",
+      "current_issue": null,
+      "current_pr": null,
+      "worktree": ".worktrees/game-logic",
+      "branch": null,
+      "started_at": null
+    },
+    "frontend": {
+      "state": "IDLE",
+      "current_issue": null,
+      "current_pr": null,
+      "worktree": ".worktrees/frontend",
+      "branch": null,
+      "started_at": null
+    },
+    "backend": {
+      "state": "IDLE",
+      "current_issue": null,
+      "current_pr": null,
+      "worktree": ".worktrees/backend",
+      "branch": null,
+      "started_at": null
+    },
+    "devops": {
+      "state": "IDLE",
+      "current_issue": null,
+      "current_pr": null,
+      "worktree": ".worktrees/devops",
+      "branch": null,
+      "started_at": null
+    }
+  },
+  "last_updated": "2025-01-09T00:00:00Z"
+}
