@@ -1,4 +1,7 @@
-# /assign-review <pr-number> <agent-name>
+---
+description: PR에 리뷰어 할당
+argument-hint: <pr-number> <agent-name>
+---
 
 특정 PR에 에이전트를 리뷰어로 할당합니다.
 

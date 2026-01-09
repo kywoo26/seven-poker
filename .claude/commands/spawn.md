@@ -1,4 +1,7 @@
-# /spawn <agent-name> <task-description>
+---
+description: 에이전트에게 작업 할당
+argument-hint: <agent-name> <task-description>
+---
 
 에이전트를 백그라운드에서 실행하여 독립적으로 작업하게 합니다.
 

@@ -1,4 +1,6 @@
-# /check-prs
+---
+description: 열린 PR 목록 확인
+---
 
 열린 PR 목록과 CI 상태를 확인합니다.
 

@@ -1,4 +1,6 @@
-# /check-issues
+---
+description: 열린 Issue 목록 확인
+---
 
 열린 Issue 목록을 확인합니다.
 

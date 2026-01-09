@@ -1,4 +1,7 @@
-# /check-logs <agent-name>
+---
+description: 에이전트 작업 로그 확인
+argument-hint: <agent-name>
+---
 
 에이전트의 작업 로그를 확인합니다.
 

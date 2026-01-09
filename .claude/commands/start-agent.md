@@ -1,4 +1,7 @@
-# /start-agent <agent-name>
+---
+description: 에이전트 시작 명령어 생성
+argument-hint: <agent-name>
+---
 
 새 터미널에서 에이전트를 시작하기 위한 명령어를 생성합니다.
 
