@@ -3,88 +3,96 @@ description: 에이전트에게 작업 할당
 argument-hint: <agent-name> <task-description>
 ---
 
-에이전트를 백그라운드에서 실행하여 독립적으로 작업하게 합니다.
+에이전트에게 개발 작업을 할당하고 백그라운드에서 실행합니다.
 
 ## Arguments
 - `agent-name`: 실행할 에이전트 (game-logic, frontend, backend, devops)
-- `task-description`: 작업 설명 (Issue 생성 및 개발에 사용)
+- `task-description`: 작업 설명
 
 ## What to do
 
 ### 1. Validate Agent
-에이전트 이름이 유효한지 확인합니다.
-유효한 에이전트: game-logic, frontend, backend, devops
+에이전트 이름이 유효한지 확인: game-logic, frontend, backend, devops
 
 ### 2. Check Agent State
-`.claude/state.json`에서 해당 에이전트의 상태를 확인합니다.
-- PR_PENDING 상태면 새 작업 할당 불가 (에러 메시지 출력)
-- IDLE 또는 REVIEWING 상태면 진행
+`.claude/state.json`에서 에이전트 상태 확인:
+- PR_PENDING 상태면 → 에러: "에이전트가 PR 대기 중입니다. 머지 후 다시 시도하세요."
+- IDLE 또는 REVIEWING 상태면 → 진행
 
-### 3. Create Git Worktree
+### 3. Create/Update Worktree
 ```bash
-# Worktree 디렉토리가 없으면 생성
-git worktree add .worktrees/<agent-name> -b feature/<agent-name>/<task-slug>
+# 기존 worktree 있으면 삭제 후 재생성
+git worktree remove .worktrees/<agent-name> --force 2>/dev/null
+git worktree add .worktrees/<agent-name> -b feature/<agent-name>/<task-slug> master
 ```
 
 ### 4. Create GitHub Issue
 ```bash
-gh issue create \
+gh issue create --repo kywoo26/seven-poker \
   --title "[<agent-name>] <task-description>" \
-  --body "## Task\n<task-description>\n\n## Agent\n<agent-name>\n\n## Acceptance Criteria\n- [ ] Implementation complete\n- [ ] Tests passing\n- [ ] Documentation updated" \
-  --label "agent:<agent-name>"
+  --body "## Task
+<task-description>
+
+## Agent
+<agent-name>
+
+## Acceptance Criteria
+- [ ] Implementation complete
+- [ ] Tests passing
+- [ ] Documentation updated"
 ```
+Issue 번호를 저장합니다.
 
 ### 5. Update State
-`.claude/state.json`을 업데이트합니다:
+`.claude/state.json` 업데이트:
 ```json
 {
   "agents": {
     "<agent-name>": {
       "state": "DEVELOPING",
       "current_issue": <issue-number>,
-      "worktree": ".worktrees/<agent-name>",
+      "current_pr": null,
       "branch": "feature/<agent-name>/<task-slug>",
-      "started_at": "<timestamp>"
+      "started_at": "<ISO timestamp>"
     }
   }
 }
 ```
 
-### 6. Launch Agent in Background
-Task tool을 사용하여 에이전트를 백그라운드에서 실행합니다.
-
-에이전트에게 전달할 컨텍스트:
-- 에이전트 정의 파일 (`.claude/agents/<agent-name>.md`)
-- CLAUDE.md
-- Issue 내용
-- Worktree 경로
-
-에이전트 지시사항:
+### 6. Launch Agent (Background)
+**Task tool을 반드시 다음과 같이 호출:**
 ```
-You are the <agent-name> agent for the Seven Poker project.
+subagent_type: "general-purpose"
+run_in_background: true
+prompt: (아래 내용)
+```
 
-## Your Task
-<task-description>
-
-## Issue
-#<issue-number>
+**프롬프트:**
+```
+You are the <agent-name> agent for Seven Poker.
 
 ## Working Directory
-.worktrees/<agent-name>
+C:\Users\K\dev\github\seven-poker\.worktrees\<agent-name>
 
-## Instructions
-1. Read your agent definition at .claude/agents/<agent-name>.md
-2. Work in your worktree: cd .worktrees/<agent-name>
-3. Implement the feature with tests and documentation
-4. When complete, create a PR:
-   gh pr create --title "[<agent-name>] <task-title>" --body "..." --base main
-5. Update state.json: set your state to PR_PENDING
+## Setup (필수)
+1. cd C:\Users\K\dev\github\seven-poker\.worktrees\<agent-name>
+2. git fetch origin && git rebase origin/master
+
+## Your Task
+Issue #<issue-number>: <task-description>
+
+## Development Steps
+1. Read CLAUDE.md and .claude/agents/<agent-name>.md
+2. Implement feature with tests
+3. Commit: git add -A && git commit -m "feat(<agent-name>): <description>"
+4. Push: git push -u origin feature/<agent-name>/<task-slug>
+5. Create PR: gh pr create --base master --repo kywoo26/seven-poker --title "[<agent-name>] <title>" --body "## Summary\n..."
+6. Update state.json: state → "PR_PENDING", current_pr → PR번호
 
 ## Rules
-- Follow the code standards in your agent definition
-- Write comprehensive tests
-- Document all public APIs
-- Create detailed PR description
+- Only work in the worktree directory above
+- Write tests for all functionality
+- Write detailed PR description
 ```
 
 ### 7. Output
@@ -95,7 +103,6 @@ You are the <agent-name> agent for the Seven Poker project.
 🌿 Branch: feature/<agent-name>/<task-slug>
 📁 Worktree: .worktrees/<agent-name>
 
-Agent is now working in the background.
-Use /agents to check status.
-Use /logs <agent-name> to see progress.
+Agent is working in background.
+Use /check-agents to monitor progress.
 ```
