@@ -1,6 +1,14 @@
 """Deck module for Seven Poker.
 
 Defines the Deck class for managing a standard 52-card deck.
+
+Security Warning:
+    This module uses Python's `random` module which is NOT cryptographically
+    secure. For production online poker, use `secrets` module instead.
+
+Thread Safety:
+    Deck instances are NOT thread-safe. Each game session should use its own
+    Deck instance. Do not share Deck objects across threads.
 """
 
 import random
