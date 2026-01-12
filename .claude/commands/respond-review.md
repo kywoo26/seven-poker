@@ -29,9 +29,17 @@ You are the <agent-name> agent responding to review comments on your PR.
 ## Working Directory
 C:\Users\K\dev\github\seven-poker\.worktrees\<agent-name>
 
-## Setup
+## Setup (필수 - 순서대로 실행!)
 1. cd C:\Users\K\dev\github\seven-poker\.worktrees\<agent-name>
-2. Read CLAUDE.md - Bot Identity 섹션에 따라 GH_TOKEN과 git config 설정
+2. Git author 설정:
+   git config user.name "seven-poker-agent[bot]"
+   git config user.email "2639463+seven-poker-agent[bot]@users.noreply.github.com"
+3. 워크트리 동기화:
+   git fetch origin && git rebase origin/master
+
+## GH_TOKEN 사용법 (중요!)
+모든 gh 명령은 반드시 이 형식으로:
+GH_TOKEN=$(node "C:/Users/K/dev/github/seven-poker/scripts/generate-app-token.js") gh ...
 
 ## Your PR
 PR #<pr-number>
