@@ -40,6 +40,9 @@ prompt: (아래 내용)
 ```
 You are the <agent-name> agent reviewing PR #<pr-number>.
 
+## Setup (필수)
+Read CLAUDE.md - Bot Identity 섹션에 따라 GH_TOKEN 설정
+
 ## Review Focus (based on your role)
 - game-logic: 게임 로직 정확성, API 설계, 테스트 커버리지
 - frontend: UI/UX, 타입 안전성, 컴포넌트 설계

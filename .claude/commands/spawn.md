@@ -76,13 +76,14 @@ C:\Users\K\dev\github\seven-poker\.worktrees\<agent-name>
 
 ## Setup (필수)
 1. cd C:\Users\K\dev\github\seven-poker\.worktrees\<agent-name>
-2. git fetch origin && git rebase origin/master
+2. Read CLAUDE.md - Bot Identity 섹션에 따라 GH_TOKEN과 git config 설정
+3. git fetch origin && git rebase origin/master
 
 ## Your Task
 Issue #<issue-number>: <task-description>
 
 ## Development Steps
-1. Read CLAUDE.md and .claude/agents/<agent-name>.md
+1. Read .claude/agents/<agent-name>.md
 2. Implement feature with tests
 3. Commit: git add -A && git commit -m "feat(<agent-name>): <description>"
 4. Push: git push -u origin feature/<agent-name>/<task-slug>

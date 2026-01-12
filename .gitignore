@@ -70,3 +70,7 @@ logs/
 
 # Claude Code temp files
 tmpclaude-*
+
+# GitHub App private key
+*.pem
+.github-app-token

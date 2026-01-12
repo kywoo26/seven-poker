@@ -138,6 +138,44 @@ seven-poker/
 
 각 에이전트 상세: `.claude/agents/<name>.md`
 
+## Bot Identity (GitHub App)
+
+모든 에이전트는 GitHub 작업 시 `seven-poker-agent[bot]` 아이덴티티를 사용합니다.
+
+### gh 명령 실행 방법 (중요!)
+**각 gh 명령 앞에 토큰을 붙여야 합니다:**
+```bash
+# 올바른 방법 - 명령 앞에 토큰 지정
+GH_TOKEN=$(node "C:/Users/K/dev/github/seven-poker/scripts/generate-app-token.js") gh pr comment ...
+GH_TOKEN=$(node "C:/Users/K/dev/github/seven-poker/scripts/generate-app-token.js") gh api ...
+
+# 또는 한 세션에서 여러 명령 실행
+export GH_TOKEN=$(node "C:/Users/K/dev/github/seven-poker/scripts/generate-app-token.js") && gh pr comment ... && gh api ...
+```
+
+**잘못된 방법 (토큰이 적용되지 않음):**
+```bash
+# ❌ export 후 별도 명령 - 세션이 달라서 적용 안됨
+export GH_TOKEN=$(node ...)
+gh pr comment ...  # 토큰 없이 실행됨
+```
+
+### Git author 설정 (커밋용)
+```bash
+git config user.name "seven-poker-agent[bot]"
+git config user.email "2639463+seven-poker-agent[bot]@users.noreply.github.com"
+```
+
+### Git 규칙
+- **절대 `--amend` 사용 금지** - 커밋 히스토리를 유지해야 변경사항 추적 가능
+- 수정사항은 항상 새 커밋으로 생성
+- `--force` push 금지
+
+### 결과
+- 모든 커밋: `seven-poker-agent[bot]` 작성자로 표시
+- 모든 PR/이슈/코멘트: `seven-poker-agent[bot]`으로 표시
+- GitHub UI에서 봇 뱃지 표시됨
+
 ## PR Comment Response
 
 에이전트는 자신의 PR에 달린 코멘트에 응답해야 합니다:

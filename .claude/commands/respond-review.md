@@ -30,7 +30,8 @@ You are the <agent-name> agent responding to review comments on your PR.
 C:\Users\K\dev\github\seven-poker\.worktrees\<agent-name>
 
 ## Setup
-cd C:\Users\K\dev\github\seven-poker\.worktrees\<agent-name>
+1. cd C:\Users\K\dev\github\seven-poker\.worktrees\<agent-name>
+2. Read CLAUDE.md - Bot Identity 섹션에 따라 GH_TOKEN과 git config 설정
 
 ## Your PR
 PR #<pr-number>
@@ -43,20 +44,30 @@ gh api repos/kywoo26/seven-poker/pulls/<pr-number>/comments --jq '.[] | {id, pat
 Also check general PR comments:
 gh pr view <pr-number> --repo kywoo26/seven-poker --comments
 
-### 2. For Each Comment, Respond Individually
-각 코멘트에 대해 개별적으로 판단하고 대응:
+### 2. For Each Comment, Respond AND Act
+각 코멘트에 대해 **반드시 판단 → 실행 → 응답** 순서로 처리:
 
-**코드 수정이 필요한 경우:**
-1. 해당 파일/라인 수정
-2. 수정 후 해당 코멘트에 reply:
-   gh api repos/kywoo26/seven-poker/pulls/<pr-number>/comments/<comment-id>/replies -f body="수정했습니다. <변경 내용 설명>"
+**중요: 말만 하지 말고 실제로 코드를 수정해야 합니다!**
+
+**코드 수정이 필요한 경우 (반드시 실행!):**
+1. **먼저** 해당 파일/라인을 실제로 수정
+2. 수정 완료 후 reply:
+   gh api repos/kywoo26/seven-poker/pulls/<pr-number>/comments/<comment-id>/replies -f body="수정 완료: <구체적인 변경 내용>"
 
 **수정이 불필요하거나 의견이 다른 경우:**
-해당 코멘트에 reply로 이유 설명:
-gh api repos/kywoo26/seven-poker/pulls/<pr-number>/comments/<comment-id>/replies -f body="<이유 설명>"
+구체적인 기술적 이유와 함께 reply:
+gh api repos/kywoo26/seven-poker/pulls/<pr-number>/comments/<comment-id>/replies -f body="<구체적 이유>"
 
-**일반 PR 코멘트 응답:**
-gh pr comment <pr-number> --repo kywoo26/seven-poker --body "RE: <원래 코멘트 요약>\n\n<응답>"
+**PR 범위를 벗어나는 경우 (Defer):**
+모든 피드백을 이 PR에서 해결할 필요는 없습니다.
+1. 범위 밖이라고 판단되면 GitHub Issue 생성:
+   gh issue create --repo kywoo26/seven-poker --title "[follow-up] <제목>" --body "PR #<pr-number> 리뷰에서 제안된 사항\n\n<상세 내용>"
+2. 해당 코멘트에 reply:
+   gh api repos/kywoo26/seven-poker/pulls/<pr-number>/comments/<comment-id>/replies -f body="이 PR 범위를 벗어나므로 follow-up issue로 생성했습니다: #<issue-number>"
+
+**이미 답변한 코멘트가 있는 경우:**
+- 이전 답변에서 "~하겠습니다" 등 약속한 내용 중 PR 범위 내 것은 **반드시 실행**
+- PR 범위 밖이면 issue 생성 후 defer
 
 ### 3. Push Changes (if any)
 수정사항이 있으면:
@@ -70,9 +81,13 @@ gh pr comment <pr-number> --repo kywoo26/seven-poker --body "## Review Response 
 - 반영하지 않은 항목: N개 (사유 포함)"
 
 ## Rules
+- **Action First**: 코드 수정이 필요하면 반드시 먼저 수정하고 reply
+- **No Empty Promises**: "~하겠습니다"라고만 하고 안 하면 안됨
 - 각 코멘트에 개별적으로 대응 (일괄 처리 X)
 - 수정 시 해당 리뷰 코멘트에 reply
 - 정중하고 건설적인 답변
+- **절대 --amend 사용 금지** - 커밋은 항상 새로 생성하여 히스토리 유지
+- 여러 수정사항은 개별 커밋 또는 하나의 새 커밋으로 (amend 아님)
 ```
 
 ### 3. Output
